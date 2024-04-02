@@ -108,13 +108,23 @@ impl TcpKeepaliveConfig {
         }
     }
 
-    #[cfg(not(any(target_os = "openbsd", target_os = "redox", target_os = "solaris")))]
+    #[cfg(not(any(
+        target_os = "openbsd",
+        target_os = "redox",
+        target_os = "solaris",
+        target_os = "aix"
+    )))]
     fn ka_with_interval(ka: TcpKeepalive, interval: Duration, dirty: &mut bool) -> TcpKeepalive {
         *dirty = true;
         ka.with_interval(interval)
     }
 
-    #[cfg(any(target_os = "openbsd", target_os = "redox", target_os = "solaris"))]
+    #[cfg(any(
+        target_os = "openbsd",
+        target_os = "redox",
+        target_os = "solaris",
+        target_os = "aix"
+    ))]
     fn ka_with_interval(ka: TcpKeepalive, _: Duration, _: &mut bool) -> TcpKeepalive {
         ka // no-op as keepalive interval is not supported on this platform
     }
@@ -123,7 +133,8 @@ impl TcpKeepaliveConfig {
         target_os = "openbsd",
         target_os = "redox",
         target_os = "solaris",
-        target_os = "windows"
+        target_os = "windows",
+        target_os = "aix"
     )))]
     fn ka_with_retries(ka: TcpKeepalive, retries: u32, dirty: &mut bool) -> TcpKeepalive {
         *dirty = true;
@@ -134,7 +145,8 @@ impl TcpKeepaliveConfig {
         target_os = "openbsd",
         target_os = "redox",
         target_os = "solaris",
-        target_os = "windows"
+        target_os = "windows",
+        target_os = "aix"
     ))]
     fn ka_with_retries(ka: TcpKeepalive, _: u32, _: &mut bool) -> TcpKeepalive {
         ka // no-op as keepalive retries is not supported on this platform
@@ -1178,7 +1190,12 @@ mod tests {
         }
     }
 
-    #[cfg(not(any(target_os = "openbsd", target_os = "redox", target_os = "solaris")))]
+    #[cfg(not(any(
+        target_os = "openbsd",
+        target_os = "redox",
+        target_os = "solaris",
+        target_os = "aix"
+    )))]
     #[test]
     fn tcp_keepalive_interval_config() {
         let mut kac = TcpKeepaliveConfig::default();
@@ -1194,7 +1211,8 @@ mod tests {
         target_os = "openbsd",
         target_os = "redox",
         target_os = "solaris",
-        target_os = "windows"
+        target_os = "windows",
+        target_os = "aix"
     )))]
     #[test]
     fn tcp_keepalive_retries_config() {
